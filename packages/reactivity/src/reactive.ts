@@ -6,7 +6,6 @@ import { activeEffect } from "./effect";
 const reactiveMap = new WeakMap() // 弱饮用 key只能是对象
 
 
-
 // 实现同一个对象多次代理 返回同一个代理
 // 代理对象呗再次代理，可以直接返回
 export function reactive(target) {
@@ -29,7 +28,9 @@ export function reactive(target) {
   // 下一次你传递的是proxy 我们可以看一下有没有代理过，如果访问这个proxy 有get方法的时候说明就是访问过了
 
   const proxy = new Proxy(target, multableHandlers)
+
   reactiveMap.set(target, proxy)
+
   return proxy
 }
 

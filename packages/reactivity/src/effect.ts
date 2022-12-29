@@ -96,3 +96,9 @@ export function trigger(target, type, key, value, oldValue) {
 //     state.age   //age e3
 //   })
 // })
+
+// 1.创建一个响应式对象 new Proxy
+// 2.effect默认数据变化能更新，先将正在执行的effect作为全局变量，渲染取值
+// 3.在get方法中进行依赖收集
+// 4.weakmap 对象: map(属性： set(effect))
+// 5.用户数据发生数据变化，会通过对象属性来查找相对应的effect集合，找到effect后调用run()方法全部执行
