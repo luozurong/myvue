@@ -1,5 +1,17 @@
 
 export let activeEffect = undefined // 导出的是一个饮用
+
+function clearupEffect (effect) {
+  // 双向关联，都要清空
+  // effect.deps = [] // 不能这么写
+  const { deps } = effect // deep里面装的是name对应的effect
+  for( let i = 0; i < deps.length; i++) {
+    deps[i].delete(effect) //  解除effect，重新收集依赖
+  }
+
+  effect.deps.length = 0
+}
+
 export class ReactiveEffect {
   // 表示在市里上增加了active属性
   public parent = null
@@ -19,7 +31,12 @@ export class ReactiveEffect {
     try {
       this.parent = activeEffect
       activeEffect = this
+
+      // 执行用户函数之前将之前收集的依赖内容清空 ativeEffect.deps = [(set), [set]]
+      clearupEffect(this)
+
       return this.fn() // 稍后调用取值操作的时候，就可以获取到这个全局的activeEffect
+
     } finally {
       activeEffect = this.parent
       this.parent = null
@@ -68,13 +85,18 @@ export function trigger(target, type, key, value, oldValue) {
   const depsMap = targetMap.get(target)
   if (!depsMap) return // 触发的值不在模版中使用
 
-  const effect = depsMap.get(key) // 找到属性对应的effect
-  effect && effect.forEach(effect => {
-    // 我们在执行effect的时候又要执行自己，那我们需要屏蔽掉，无需无限调用
-    if (effect !== activeEffect) {
-      effect.run()
-    }
-  });
+  let effects = depsMap.get(key) // 找到属性对应的effect
+
+  // 执行之前， 先拷贝一份， 不要关联引用
+  if (effects) {
+    effects = new Set(effects)
+    effects.forEach(effect => {
+      // 我们在执行effect的时候又要执行自己，那我们需要屏蔽掉，无需无限调用
+      if (effect !== activeEffect) {
+        effect.run()
+      }
+    });
+  }
 }
 
 // 反向收集
