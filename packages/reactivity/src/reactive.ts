@@ -1,6 +1,5 @@
 import { isObject } from "@vue/shared";
 import { multableHandlers, ReactiveFlags } from './baseHandlers'
-import { activeEffect } from "./effect";
 
 // 1.将数据转换为响应式数据,只能做对象的代理
 const reactiveMap = new WeakMap() // 弱饮用 key只能是对象

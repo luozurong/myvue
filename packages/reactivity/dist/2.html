@@ -19,19 +19,21 @@
         age: 30
       })
 
-      let runner = effect(() => {
-        document.body.innerHTML = state.age
+      effect(() => {
+        // 我们期望的是每次执行effect的时候都可以清理一遍依赖，重新收集
+        console.log('render')
+        // 分支切换
+        document.body.innerHTML = state.flag ? state.name : state.age
       })
 
-      // effectScope()
-      runner.effect.stop()
-
       setTimeout(() => {
-        state.age = 18
+        state.flag = false
+
         setTimeout(() => {
-          runner()
-        }, 2000)
-      },1000);
+          console.log('修改name,原则上不更新')
+          state.name = 'lzr'
+        }, 1000)
+      }, 1000)
       
     </script>
   </body>

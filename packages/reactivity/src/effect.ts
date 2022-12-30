@@ -39,9 +39,16 @@ export class ReactiveEffect {
 
     } finally {
       activeEffect = this.parent
-      this.parent = null
+      // this.parent = null
     }
     
+  }
+
+  stop () {
+    if (this.active) {
+      this.active = false
+      clearupEffect(this) // 停止effect收集
+    }
   }
 }
 
@@ -49,7 +56,14 @@ export function effect (fn) {
   // 这里fn可以根据状态变化重新执行， effect可以嵌套执行
 
   const _effect = new ReactiveEffect(fn) // 创建响应式effect
+  
   _effect.run() // 默认执行一次
+
+  const runner = _effect.run.bind(_effect) // 绑定this执行
+
+  runner.effect = _effect // 将effect挂在到runner函数上
+
+  return runner
 }
 
 // 一个effect对应多个属性，一个属性对应多个effect 结论多对多
