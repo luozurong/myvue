@@ -11,6 +11,7 @@
     <script src="./reactivity.global.js"></script>
     <div id="app"></div>
     <script>
+      let waiting = false
       const { effect, reactive } = VueReactivity
       
       const state = reactive({
@@ -21,17 +22,35 @@
 
       let runner = effect(() => {
         document.body.innerHTML = state.age
+      }, {
+        scheduler () {
+          console.log('run')
+          if (!waiting) {
+            waiting = true
+            setTimeout(() => {
+              runner()
+              waiting = false
+            }, 1000)
+          }
+        }
       })
 
-      // effectScope()
-      runner.effect.stop()
+      state.age = 1000;
+      state.age = 2000;
+      state.age = 3000;
+      state.age = 4000;
+      state.age = 5000;
 
-      setTimeout(() => {
-        state.age = 18
-        setTimeout(() => {
-          runner()
-        }, 2000)
-      },1000);
+
+      // effectScope()
+      // runner.effect.stop()
+
+      // setTimeout(() => {
+      //   state.age = 18
+      //   setTimeout(() => {
+      //     runner()
+      //   }, 2000)
+      // },1000);
       
     </script>
   </body>

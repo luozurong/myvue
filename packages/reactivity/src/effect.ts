@@ -17,7 +17,7 @@ export class ReactiveEffect {
   public parent = null
   public deps = []
   public active = true // 这个effect默认是激活状态
-  constructor(public fn) {
+  constructor(public fn, public scheduler) {
     // this.active = true
     
   }
@@ -52,11 +52,11 @@ export class ReactiveEffect {
   }
 }
 
-export function effect (fn) {
+export function effect (fn, options: any = {}) {
   // 这里fn可以根据状态变化重新执行， effect可以嵌套执行
 
-  const _effect = new ReactiveEffect(fn) // 创建响应式effect
-  
+  const _effect = new ReactiveEffect(fn, options.scheduler) // 创建响应式effect
+
   _effect.run() // 默认执行一次
 
   const runner = _effect.run.bind(_effect) // 绑定this执行
@@ -107,7 +107,11 @@ export function trigger(target, type, key, value, oldValue) {
     effects.forEach(effect => {
       // 我们在执行effect的时候又要执行自己，那我们需要屏蔽掉，无需无限调用
       if (effect !== activeEffect) {
-        effect.run()
+        if (effect.scheduler) {
+          effect.scheduler() // 如果用户传入了scheduler 则执行schecduler
+        } else {
+          effect.run() // 否则执行默认刷新视图
+        }
       }
     });
   }
