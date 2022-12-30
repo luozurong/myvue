@@ -4,6 +4,9 @@ import { multableHandlers, ReactiveFlags } from './baseHandlers'
 // 1.将数据转换为响应式数据,只能做对象的代理
 const reactiveMap = new WeakMap() // 弱饮用 key只能是对象
 
+export function isReactive(value) {
+  return !!(value && value[ReactiveFlags.IS_REACTIVE])
+}
 
 // 实现同一个对象多次代理 返回同一个代理
 // 代理对象呗再次代理，可以直接返回

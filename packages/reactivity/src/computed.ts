@@ -22,7 +22,7 @@ class ComputedRefIml {
     })
   }
 
-  // 类中的属性访问器 底层是Object.definePropertt
+  // 类中的属性访问器 底层是Object.defineProperty
   get value () {
     // 做依赖收集
     trackEffects(this.dep)
