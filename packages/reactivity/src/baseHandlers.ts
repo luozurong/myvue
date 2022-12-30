@@ -15,11 +15,9 @@ export const multableHandlers = {
     // 代理对象上取值
     // 可以监控到用户取值了
     let res = Reflect.get(target, key, receiver)
-
     if (isObject(res)) {
       return reactive(res) // 深度代理 性能代理 取值就可以代理
     }
-    
     return res
   },
   set(target, key, value, receiver) {

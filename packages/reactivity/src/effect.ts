@@ -86,13 +86,19 @@ export function track(target, type, key) {
     depsMap.set(key, (dep = new Set()))
   }
 
-  let shouldTrack = !dep.has(activeEffect)
-  if (shouldTrack) {
-    dep.add(activeEffect)
-    // 存放属性对应的set name: new Set() 
-    activeEffect.deps.push(dep) // 让effect记录dep 稍后清理的时候会用到
-  }
+  trackEffects(dep)
 
+}
+
+export function trackEffects (dep) {
+  if (activeEffect) {
+    let shouldTrack = !dep.has(activeEffect)
+    if (shouldTrack) {
+      dep.add(activeEffect)
+      // 存放属性对应的set name: new Set() 
+      activeEffect.deps.push(dep) // 让effect记录dep 稍后清理的时候会用到
+    }
+  }
 }
 
 export function trigger(target, type, key, value, oldValue) {
@@ -103,18 +109,22 @@ export function trigger(target, type, key, value, oldValue) {
 
   // 执行之前， 先拷贝一份， 不要关联引用
   if (effects) {
-    effects = new Set(effects)
-    effects.forEach(effect => {
-      // 我们在执行effect的时候又要执行自己，那我们需要屏蔽掉，无需无限调用
-      if (effect !== activeEffect) {
-        if (effect.scheduler) {
-          effect.scheduler() // 如果用户传入了scheduler 则执行schecduler
-        } else {
-          effect.run() // 否则执行默认刷新视图
-        }
-      }
-    });
+    triggerEffects(effects)
   }
+}
+
+export function triggerEffects (effects) {
+  effects = new Set(effects)
+  effects.forEach(effect => {
+    // 我们在执行effect的时候又要执行自己，那我们需要屏蔽掉，无需无限调用
+    if (effect !== activeEffect) {
+      if (effect.scheduler) {
+        effect.scheduler() // 如果用户传入了scheduler 则执行schecduler
+      } else {
+        effect.run() // 否则执行默认刷新视图
+      }
+    }
+  });
 }
 
 // 反向收集

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+  </head>
+  <body>
+    <!-- <script src="../../../node_modules/@vue/reactivity/dist/reactivity.global.js"></script> -->
+    <script src="./reactivity.global.js"></script>
+    <div id="app"></div>
+    <script>
+      let waiting = false
+      const { effect, reactive } = VueReactivity
+      
+      const state = reactive({
+        flag: true,
+        name: 'jw',
+        age: 30,
+        addr: {
+          num: 10
+        }
+      })
+
+      let runner = effect(() => {
+        document.body.innerHTML = state.age
+      })
+
+      console.log(state.addr);
+      
+    </script>
+  </body>
+</html>
