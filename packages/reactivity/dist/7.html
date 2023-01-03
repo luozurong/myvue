@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+  </head>
+  <body>
+    <!-- <script src="../../../node_modules/vue/dist/vue.global.js"></script> -->
+    <!-- <script src="../../../node_modules/@vue/reactivity/dist/reactivity.global.js"></script> -->
+    <script src="./reactivity.global.js"></script>
+    <div id="app"></div>
+    <script>
+      const { ref, effect, reactive, toRefs, toRef } = VueReactivity  // reactive对象的响应式
+      // const { ref, effect, reactive, toRefs } = Vue
+
+      // const flag = ref(true)
+      // effect(() => {
+      //   app.innerHTML = flag.value ? 'l' : 'zr'
+      // })
+      // setTimeout(() => {
+      //   flag.value = false
+      // }, 1000)
+      // 原理
+      // {
+      //   _value: true
+      //   get () {
+      //     return this._value
+      //   }
+      //   set (newValue) {
+      //     this._value = newValue
+      //   }
+      // }
+
+
+
+      const school = reactive({
+        name: 'lzr',
+        age: 18
+      })
+      // 解构后就丧失了响应式了
+      // let {name, age} = school
+      // console.log(toRefs)
+      // let { name, age } = toRefs(school)
+
+      let  names = toRef(school, 'name')
+      console.log(names)
+
+      effect(() => {
+        app.innerHTML = `${name.value}今年${age.value}岁了`
+      })
+
+      setTimeout(() => {
+        age.value = 1000
+      }, 1000)
+
+    </script>
+  </body>
+</html>

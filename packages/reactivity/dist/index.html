@@ -12,48 +12,23 @@
     <script src="./reactivity.global.js"></script>
     <div id="app"></div>
     <script>
-      const { ref, effect, reactive, toRefs, toRef } = VueReactivity  // reactive对象的响应式
-      // const { ref, effect, reactive, toRefs } = Vue
+      const { ref, effect, reactive, toRefs, toRef, proxyRefs } = VueReactivity  // reactive对象的响应式
+      // const { ref, effect, reactive, toRefs, toRef, proxyRefs } = Vue
+      
+      let name = ref('lzr')
+      let age = ref(18)
 
-      // const flag = ref(true)
-      // effect(() => {
-      //   app.innerHTML = flag.value ? 'l' : 'zr'
-      // })
-      // setTimeout(() => {
-      //   flag.value = false
-      // }, 1000)
-      // 原理
-      // {
-      //   _value: true
-      //   get () {
-      //     return this._value
-      //   }
-      //   set (newValue) {
-      //     this._value = newValue
-      //   }
-      // }
-
-
-
-      const school = reactive({
-        name: 'lzr',
-        age: 18
+      let school = proxyRefs({
+        name,
+        age
       })
-      // 解构后就丧失了响应式了
-      // let {name, age} = school
-      // console.log(toRefs)
-      // let { name, age } = toRefs(school)
 
-      let  names = toRef(school, 'name')
-      console.log(names)
-
+      // 后续其实我们都是在模版上取值的, 所以在模版里取值的时候都会自动去掉ref
+      // 我们在使用数据的时候，都是吧响应式的数据toRefs,在模版里就不需要。value
       effect(() => {
-        app.innerHTML = `${name.value}今年${age.value}岁了`
+        app.innerHTML = school.name + (school.age + 1)
       })
 
-      setTimeout(() => {
-        age.value = 1000
-      }, 1000)
 
     </script>
   </body>
