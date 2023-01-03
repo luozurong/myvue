@@ -12,18 +12,16 @@
     <script src="./reactivity.global.js"></script>
     <div id="app"></div>
     <script>
-      const { ref, effect } = VueReactivity  // reactive对象的响应式
+      const { ref, effect, reactive, toRefs } = VueReactivity  // reactive对象的响应式
+      // const { ref, effect, reactive, toRefs } = Vue
 
-      const flag = ref(true)
-
-      effect(() => {
-        app.innerHTML = flag.value ? 'l' : 'zr'
-      })
-
-      setTimeout(() => {
-        flag.value = false
-      }, 1000)
-
+      // const flag = ref(true)
+      // effect(() => {
+      //   app.innerHTML = flag.value ? 'l' : 'zr'
+      // })
+      // setTimeout(() => {
+      //   flag.value = false
+      // }, 1000)
       // 原理
       // {
       //   _value: true
@@ -34,6 +32,26 @@
       //     this._value = newValue
       //   }
       // }
+
+
+
+      const school = reactive({
+        name: 'lzr',
+        age: 18
+      })
+      // 解构后就丧失了响应式了
+      // let {name, age} = school
+      console.log(toRefs)
+      let { name, age } = toRefs(school)
+
+      effect(() => {
+        app.innerHTML = `${name.value}今年${age.value}岁了`
+      })
+
+      setTimeout(() => {
+        age.value = 1000
+      }, 1000)
+
     </script>
   </body>
 </html>
