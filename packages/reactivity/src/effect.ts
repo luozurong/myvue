@@ -73,7 +73,7 @@ export function track(target, type, key) {
   // 单向记录， 属性记录了effect， 
   // 反向记录 记录哪些属性收集过，这样做的好处是为了清理
   // 对象 某个属性 对应多个effect 
-  // WeakMap {对象： Map{name: new Set() 》effect}}
+  // WeakMap {对象： Map{(name》key): new Set() 》effect}}
   // 只有effect里面才收集 直接state.name 不收集
   if (!activeEffect) return
 

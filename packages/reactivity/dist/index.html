@@ -12,33 +12,28 @@
     <script src="./reactivity.global.js"></script>
     <div id="app"></div>
     <script>
-      const { watch, reactive } = VueReactivity
+      const { ref, effect } = VueReactivity  // reactive对象的响应式
 
-      const state = reactive({
-        name: 'lzr',
-        addr: {
-          num: 1
-        }
-      })
-      // 监控对象无法区分前后的新值和旧值
-      // 1)监控有数据变化，数据变了重新执行
-      // watch(state, function(newValue, oldValue){
-      //   console.log(newValue, oldValue)
-      // })
-      
-      // 这里可以监控一个函数，函数返回的是老值，更新后获取新值
-      watch(()=> state.addr.num, function(newValue, oldValue){
-        console.log(newValue, oldValue)
+      const flag = ref(true)
+
+      effect(() => {
+        app.innerHTML = flag.value ? 'l' : 'zr'
       })
 
       setTimeout(() => {
-        // state.name = 'zlr'
-        state.addr.num = 123
-        state.addr.num = 456
+        flag.value = false
       }, 1000)
 
-
-      // watch 的本质就是effect, 内部对用户填写的数据进行收集依赖
+      // 原理
+      // {
+      //   _value: true
+      //   get () {
+      //     return this._value
+      //   }
+      //   set (newValue) {
+      //     this._value = newValue
+      //   }
+      // }
     </script>
   </body>
 </html>

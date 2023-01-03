@@ -1,4 +1,5 @@
 import { isFunction, isObject } from "@vue/shared";
+import { CleanPlugin } from "webpack";
 import { ReactiveEffect } from "./effect";
 import { isReactive } from "./reactive";
 
@@ -33,10 +34,16 @@ export function watch(source, cb) {
     return
   }
   let oldValue;
+  let cleanup;
+  const onCleanup = (fn) => {
+    cleanup = fn
+  }
 
   const job = () => {
+    if (cleanup) cleanup() //下一次watch开始触发
+
     const newValue = effect.run()
-    cb(newValue, oldValue)
+    cb(newValue, oldValue, onCleanup)
     oldValue = newValue
   }
 
