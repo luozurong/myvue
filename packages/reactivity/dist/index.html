@@ -12,7 +12,7 @@
     <script src="./reactivity.global.js"></script>
     <div id="app"></div>
     <script>
-      const { ref, effect, reactive, toRefs } = VueReactivity  // reactive对象的响应式
+      const { ref, effect, reactive, toRefs, toRef } = VueReactivity  // reactive对象的响应式
       // const { ref, effect, reactive, toRefs } = Vue
 
       // const flag = ref(true)
@@ -41,8 +41,11 @@
       })
       // 解构后就丧失了响应式了
       // let {name, age} = school
-      console.log(toRefs)
-      let { name, age } = toRefs(school)
+      // console.log(toRefs)
+      // let { name, age } = toRefs(school)
+
+      let  names = toRef(school, 'name')
+      console.log(names)
 
       effect(() => {
         app.innerHTML = `${name.value}今年${age.value}岁了`

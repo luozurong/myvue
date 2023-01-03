@@ -6,4 +6,4 @@ export { computed } from './computed'
 
 export { watch } from './watch'
 
-export { ref, toRefs } from './ref'
+export { ref, toRefs, toRef } from './ref'
