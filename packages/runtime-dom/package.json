@@ -1,0 +1,14 @@
+{
+  "name": "@vue/rumtime-dom",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "buildOptions": {
+    "name": "VueRuntimeDOM",
+    "format": [
+      "global",
+      "cjs",
+      "esm-bundler"
+    ]
+  }
+}
